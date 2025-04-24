@@ -1,2 +1,2 @@
-# Lista-de-Tarefas
-Lista de Tarefas implemetada com JS, HTML e CSS
+# Lista de Tarefas
+Lista de Tarefas implemetada com JS, HTML e CSS(bootstrap).
