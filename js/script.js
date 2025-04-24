@@ -1,58 +1,64 @@
-/*
-------Input-----------
-*/
+
+//------Input-----------
 let input = document.querySelector('input[name=Tarefa]');
-//console.log(input);
 
-/*
-------Button----------
-*/
+//------Button----------
 let botao = document.querySelector('#botao');
-//console.log(botao);
 
-/*
-Lista
-*/
+//------Lista-----------
 let lista = document.querySelector('#lista');
-//console.log(lista);
+
+//let tarefas = ['Jogar GTA 5', 'Correr', 'Nadar', 'Estudar Python'];
+let tarefas = JSON.parse(localStorage.getItem('tarefas')) || []; //pega do storage ou um array vazio
 
 /*
-<li class="list-group-item list-group-item-action"> Jogar GTA 5</li>
-<li class="list-group-item list-group-item-action"> Correr</li>
-<li class="list-group-item list-group-item-action"> Nadar</li>
-<li class="list-group-item list-group-item-action"> Estudar Python</li>
+--------Funções------------
 */
-
-let tarefas = [
-    'Jogar GTA 5',
-    'Correr',
-    'Nadar',
-    'Estudar Python'
-];
 
 function adicionar_tarefas(){
-
-    //limpar antes de adicionar
     lista.innerHTML = '';
 
     for(tarefa of tarefas){
-        //criar item da lista
         let itemLista = document.createElement('li');
-        //adiocionar classe a ele
         itemLista.setAttribute('class', 'list-group-item list-group-item-action');
-        //criar um texto da tarefa
+        
+        itemLista.onclick = function(){ //evento de clique num elemento da lista
+            excluir_tarefa(this);
+        }
+
         let itemTexto = document.createTextNode(tarefa);
-        //adicionar um filho a lista
         itemLista.appendChild(itemTexto);
-        //Adicionar o item da lista na lista global
         lista.appendChild(itemLista);
     }
 }
 
 adicionar_tarefas();
 
-//1 - Capturar o clique do botão
-//2 - recuperar o valor digitado no input 
+function remover_spans(){ //msgns de erro
+    let spans = document.querySelectorAll('span');
+    let card = document.querySelector('.card');
+
+    for(let i = 0; i < spans.length; i++){
+        card.removeChild(spans[i]);
+    }
+}
+
+function excluir_tarefa(tarefa){
+    //Remove a tarefa do array
+    tarefas.splice(tarefas.indexOf(tarefa.textContent), 1);
+
+    adicionar_tarefas();
+    salvar_dados_storage();
+}
+
+function salvar_dados_storage(){
+    localStorage.setItem('tarefas', JSON.stringify(tarefas));
+}
+
+/*
+----------Eventos--------------
+*/
+
 botao.onclick = function(){
     let novatarefa = input.value;
 
@@ -63,10 +69,10 @@ botao.onclick = function(){
 
         //limpar input a cada nova adição
         input.value = '';
-        //limpar msgns de erro
         remover_spans();
+        salvar_dados_storage();
+
     }else{
-        //limpar msgns de erro
         remover_spans();
         
         let card = document.querySelector('.card');
@@ -78,14 +84,5 @@ botao.onclick = function(){
 
         span.appendChild(msg);
         card.appendChild(span);     
-    }
-}
-
-function remover_spans(){
-    let spans = document.querySelectorAll('span');
-    let card = document.querySelector('.card');
-
-    for(let i = 0; i < spans.length; i++){
-        card.removeChild(spans[i]);
     }
 }
